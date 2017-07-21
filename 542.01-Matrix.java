@@ -6,31 +6,30 @@ public class Solution {
         if (m==0 || n==0 || matrix==null)
             return null;
         
-        int[][] res = new int[m][n];
-        
-        
+        Queue<int[]> queue = new LinkedList<>();
         for (int i=0; i<m; i++) {
             for (int j=0; j<n; j++) {
                 if (matrix[i][j] == 0) {
-                    res[i][j] = 0;
+                    queue.offer(new int[] {i, j});
                 } else {
-                    res[i][j] = -1;
+                    matrix[i][j] = Integer.MAX_VALUE;
                 }
             }
         }
         
-        for (int i=0; i<m; i++) {
-            for (int j=0; j<n; j++) {
-                if (res[i][j] != 0) {
-                    findDistance(res, i, j);
-                }
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        while (!queue.isEmpty()) {
+            int[] cell = queue.poll();
+            for (int[] dir : dirs) {
+                int x = cell[0] + dir[0];
+                int y = cell[1] + dir[1];
+                if (x<0 || x>=m || y<0 || y>=n || matrix[x][y] <= matrix[cell[0]][cell[1]]+1)
+                    continue;
+                queue.offer(new int[] {x, y});
+                matrix[x][y] = matrix[cell[0]][cell[1]] + 1;
             }
         }
-    }
-    
-    public void findDistance(int[][] res, int i, int j) {
-        Queue<Integer> queue = new LinkedList<>();
         
+        return matrix;
     }
-    
 }
